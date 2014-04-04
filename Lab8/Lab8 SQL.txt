@@ -1,0 +1,50 @@
+﻿2. SQL create statements
+drop table if exists person;
+create table person (
+pid serial primary key,
+firstName text not null,
+lastName text not null,
+address text not null
+);
+
+drop table if exists actor;
+create table actor (
+pid int primary key references person(pid),
+dateOfBirth date not null,
+hairColor text not null,
+eyeColor text not null,
+heightInches int not null,
+weightPounds int not null,
+SAGAnniversary date not null
+);
+
+drop table if exists director;
+create table director (
+pid int primary key references person(pid),
+filmSchool text,
+DGAnniversary date not null
+);
+
+drop table if exists movie;
+create table movie (
+mid serial primary key,
+name text not null,
+releaseYear int not null,
+domesticSales money not null,
+foreignSales money not null,
+dvdSales money not null
+);
+
+drop table if exists movies_actors;
+create table movie_actors (
+pid int references people(pid),
+mid int references movies(mid),
+primary key(pid,mid)
+);
+
+drop table if exists movies_directors;
+create table movie_directors (
+pid int references people(pid),
+mid int references movies(mid),
+primary key(pid,mid)
+);
