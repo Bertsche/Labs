@@ -1,0 +1,95 @@
+DROP TABLE IF EXISTS FlightControlOperators
+DROP TABLE IF EXISTS People
+DROP TABLE IF EXISTS Engineers
+DROP TABLE IF EXISTS Astronauts
+DROP TABLE IF EXISTS Crew
+DROP TABLE IF EXISTS Spacecraft
+DROP TABLE IF EXISTS Systems
+DROP TABLE IF EXISTS Parts
+DROP TABLE IF EXISTS Catalog
+DROP TABLE IF EXISTS Suppliers
+
+--People--
+CREATE TABLE People (
+	pid		        char(5) not null,
+	first_name    text,
+	last_name			text,
+	primary key(pid)
+);
+
+--Flight Control Operators--
+CREATE TABLE FlightControlOperators (
+	pid		            char(5) not null references People(pid),
+	chair_preference	text,
+	preferred_drink		text,
+	primary key(pid)
+);
+
+--Engineers--
+CREATE TABLE Engineers (
+	pid		        			char(5) not null references People(pid),
+	highest_degree			text,
+	favorite_videogame	text,
+	primary key(pid)
+);
+
+--Astronauts--
+CREATE TABLE Astronauts(
+	pid		        char(5) not null references People(pid),
+	years_flying	integer,
+	golf_handicap	integer,
+	primary key(pid)
+);
+
+--Spacecraft--
+CREATE TABLE Spacecraft (
+	sid						char(5) not null,
+	name					text,
+	tail_number		integer,
+	weight_tons		integer,
+	fuel_type			text,
+	crew_capacity integer,
+	primary key(sid)
+);
+
+--Crew--
+CREATE TABLE Crew (
+	pid					char(5) not null references Astronauts(pid),
+	sid					char(5) not null references Spacecraft(sid),
+	date				date
+	primary key(sid, pid)
+);
+
+--System--
+CREATE TABLE Systems(
+	sid					char(5) not null references Spacecraft(sid),
+	name				text,
+	description	text,
+	primary key(sid, name)
+);
+
+--Parts--
+CREATE TABLE Parts (
+	sid					char(5) not null references System(sid),
+	system_name text not null references System(name),
+	part_name		text not null,
+	description	text,
+	primary key(sid, system_name,part_name)
+);
+
+--Suppliers--
+CREATE TABLE Suppliers (
+	supplier_ID					char(5) not null,
+	name								text,
+	address							text,
+	payment_terms				text,
+	primary key(supplier_ID)
+);
+--Catalog--
+CREATE TABLE Catalog (
+	sid					char(5) not null references Parts(sid),
+	system_name text not null references Parts(system_name),
+	part_name		text not null references Parts(part_name),
+	supplier_id	char(5) not null references Suppliers(supplier_id),
+	primary key(sid, system_name, part_name, supplier_id)
+);
